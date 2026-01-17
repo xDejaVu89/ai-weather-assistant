@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import { Sparkles, Cloud, Menu, X } from 'lucide-react';
+import { Sparkles, Cloud, Menu, X, Zap } from 'lucide-react';
 import DarkModeToggle from './components/DarkModeToggle';
 import WeatherDashboard from './components/WeatherDashboard';
 import AIDashboard from './components/AIDashboard';
+import { FeaturesHub } from './components/FeaturesHub';
 import './App.css';
 
 function App() {
   const [location, setLocation] = useState('London');
-  const [activeView, setActiveView] = useState<'weather' | 'ai'>('weather');
+  const [activeView, setActiveView] = useState<'weather' | 'ai' | 'features'>('weather');
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -25,7 +26,7 @@ function App() {
               </div>
               <div>
                 <h1 className=\"text-xl font-bold text-gray-900 dark:text-white\">
-                  AI Weather Assistant
+                  AI Weather Assistant v2.0
                 </h1>
                 <p className=\"text-xs text-gray-500 dark:text-gray-400\">Super Smart & Learning</p>
               </div>
@@ -35,7 +36,7 @@ function App() {
             <div className=\"hidden md:flex items-center gap-2\">
               <button
                 onClick={() => setActiveView('weather')}
-                className={px-6 py-2 rounded-lg font-semibold transition-all \}
+                className={px-4 py-2 rounded-lg font-semibold transition-all \\}
               >
                 <div className=\"flex items-center gap-2\">
                   <Cloud size={18} />
@@ -44,11 +45,20 @@ function App() {
               </button>
               <button
                 onClick={() => setActiveView('ai')}
-                className={px-6 py-2 rounded-lg font-semibold transition-all \}
+                className={px-4 py-2 rounded-lg font-semibold transition-all \\}
               >
                 <div className=\"flex items-center gap-2\">
                   <Sparkles size={18} />
                   <span>AI Intelligence</span>
+                </div>
+              </button>
+              <button
+                onClick={() => setActiveView('features')}
+                className={px-4 py-2 rounded-lg font-semibold transition-all \\}
+              >
+                <div className=\"flex items-center gap-2\">
+                  <Zap size={18} />
+                  <span>Features</span>
                 </div>
               </button>
             </div>
@@ -70,7 +80,7 @@ function App() {
                   setActiveView('weather');
                   setMenuOpen(false);
                 }}
-                className={w-full px-4 py-3 rounded-lg font-semibold transition-all text-left \}
+                className=\"w-full px-4 py-3 rounded-lg font-semibold transition-all text-left bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-300 hover:bg-gray-200\"
               >
                 <div className=\"flex items-center gap-2\">
                   <Cloud size={18} />
@@ -82,11 +92,23 @@ function App() {
                   setActiveView('ai');
                   setMenuOpen(false);
                 }}
-                className={w-full px-4 py-3 rounded-lg font-semibold transition-all text-left \}
+                className=\"w-full px-4 py-3 rounded-lg font-semibold transition-all text-left bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-300 hover:bg-gray-200\"
               >
                 <div className=\"flex items-center gap-2\">
                   <Sparkles size={18} />
                   <span>AI Intelligence</span>
+                </div>
+              </button>
+              <button
+                onClick={() => {
+                  setActiveView('features');
+                  setMenuOpen(false);
+                }}
+                className=\"w-full px-4 py-3 rounded-lg font-semibold transition-all text-left bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-300 hover:bg-gray-200\"
+              >
+                <div className=\"flex items-center gap-2\">
+                  <Zap size={18} />
+                  <span>Advanced Features</span>
                 </div>
               </button>
             </div>
@@ -96,10 +118,14 @@ function App() {
 
       {/* Main Content */}
       <main className=\"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8\">
-        {activeView === 'weather' ? (
+        {activeView === 'weather' && (
           <WeatherDashboard location={location} onLocationChange={setLocation} />
-        ) : (
+        )}
+        {activeView === 'ai' && (
           <AIDashboard location={location} />
+        )}
+        {activeView === 'features' && (
+          <FeaturesHub />
         )}
       </main>
 
@@ -109,38 +135,38 @@ function App() {
           <div className=\"grid grid-cols-1 md:grid-cols-3 gap-8\">
             <div>
               <h3 className=\"text-lg font-bold text-gray-900 dark:text-white mb-2\">
-                AI Weather Assistant
+                AI Weather Assistant v2.0
               </h3>
               <p className=\"text-sm text-gray-600 dark:text-gray-400\">
-                Your super smart weather companion powered by AI, machine learning, 
-                and real-time data from around the world.
+                Your super smart weather companion powered by AI, machine learning,
+                and real-time data from around the world. Now with 10 advanced features!
               </p>
             </div>
             <div>
               <h3 className=\"text-lg font-bold text-gray-900 dark:text-white mb-2\">
-                Features
+                Core Features
               </h3>
               <ul className=\"text-sm text-gray-600 dark:text-gray-400 space-y-1\">
                 <li> AI-Powered Predictions</li>
                 <li> Real-time Web Insights</li>
                 <li> Machine Learning Analysis</li>
-                <li> Continuous Learning</li>
+                <li> 2-8 Week Extended Forecasts</li>
               </ul>
             </div>
             <div>
               <h3 className=\"text-lg font-bold text-gray-900 dark:text-white mb-2\">
-                Data Sources
+                v2.0 Additions
               </h3>
               <ul className=\"text-sm text-gray-600 dark:text-gray-400 space-y-1\">
-                <li> Weather APIs</li>
-                <li> Expert Meteorologists</li>
-                <li> Community Reports</li>
-                <li> ML Models</li>
+                <li> User Authentication</li>
+                <li> Health & Safety Alerts</li>
+                <li> Activity Planner</li>
+                <li> Travel Planning & More</li>
               </ul>
             </div>
           </div>
           <div className=\"mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 text-center text-sm text-gray-600 dark:text-gray-400\">
-            <p> 2026 AI Weather Assistant. Built with React, FastAPI, and Machine Learning.</p>
+            <p> 2026 AI Weather Assistant v2.0. Built with React, FastAPI, Machine Learning, and </p>
           </div>
         </div>
       </footer>
