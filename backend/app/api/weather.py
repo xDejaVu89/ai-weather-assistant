@@ -12,6 +12,10 @@ from app.services.historical_service import HistoricalService
 from app.services.pollen_service import PollenService
 from app.services.detailed_weather_service import DetailedWeatherService
 from app.services.comparison_service import ComparisonService
+from app.services.enhanced_nlp_service import EnhancedNLPService
+from app.services.web_insights_service import WebInsightsService
+from app.services.ml_prediction_service import MLPredictionService
+from app.services.learning_service import LearningService
 
 router = APIRouter()
 weather_service = WeatherService()
@@ -21,6 +25,10 @@ location_service = LocationService()
 air_quality_service = AirQualityService()
 sun_service = SunService()
 outfit_service = OutfitService()
+enhanced_nlp_service = EnhancedNLPService()
+web_insights_service = WebInsightsService()
+ml_prediction_service = MLPredictionService()
+learning_service = LearningService()
 historical_service = HistoricalService()
 pollen_service = PollenService()
 detailed_weather_service = DetailedWeatherService()
@@ -267,6 +275,9 @@ async def get_best_destination(request: ComparisonRequest):
         return recommendation
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/activities")
 async def get_activity_recommendations(location: str = Query(..., description="City name")):
     """Get activity recommendations based on weather"""
     try:
@@ -275,3 +286,150 @@ async def get_activity_recommendations(location: str = Query(..., description="C
         return {"location": location, "activities": activities}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# AI Learning & Intelligence Endpoints
+
+@router.post("/ai/query")
+async def ai_query(query: str, location: str = "London", context: Optional[Dict] = None):
+    """Process intelligent query with AI understanding"""
+    try:
+        result = await enhanced_nlp_service.process_intelligent_query(query, context)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/ai/insights")
+async def get_ai_insights(location: str = "London"):
+    """Get AI-powered weather insights from learned data"""
+    try:
+        weather_data = await weather_service.get_current_weather(location)
+        insights = await enhanced_nlp_service.get_weather_insights(location, weather_data)
+        return insights
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/ai/news")
+async def get_weather_news(location: str = "London"):
+    """Get real-time weather news from online sources"""
+    try:
+        news = await web_insights_service.fetch_weather_news(location)
+        return {"location": location, "news": news}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/ai/experts")
+async def get_expert_predictions(location: str = "London"):
+    """Get expert weather predictions aggregated from online sources"""
+    try:
+        experts = await web_insights_service.get_expert_predictions(location)
+        return {"location": location, "experts": experts}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/ai/crowd-reports")
+async def get_crowd_reports(location: str = "London"):
+    """Get real-time crowd-sourced weather reports"""
+    try:
+        reports = await web_insights_service.scrape_real_time_reports(location)
+        return {"location": location, **reports}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/ai/trends")
+async def get_weather_trends():
+    """Get trending weather topics from online discussions"""
+    try:
+        trends = await web_insights_service.get_weather_trends()
+        return trends
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/ai/train")
+async def train_ml_model(historical_data: List[Dict]):
+    """Train ML model on historical weather data"""
+    try:
+        result = await ml_prediction_service.train_temperature_model(historical_data)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/ai/predict")
+async def predict_weather(days_ahead: int = 7):
+    """Get ML-predicted weather for upcoming days"""
+    try:
+        predictions = await ml_prediction_service.predict_temperature(days_ahead)
+        return {"predictions": predictions, "days_ahead": days_ahead}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/ai/detect-anomalies")
+async def detect_anomalies(current_weather: Dict, historical_avg: Dict):
+    """Detect weather anomalies using ML"""
+    try:
+        anomalies = await ml_prediction_service.detect_anomalies(current_weather, historical_avg)
+        return anomalies
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/ai/learn")
+async def learn_from_interaction(user_id: str, interaction: Dict):
+    """Learn from user interaction to improve recommendations"""
+    try:
+        await ml_prediction_service.learn_user_preferences(user_id, interaction)
+        return {"status": "learned", "message": "Interaction recorded for learning"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/ai/personalized")
+async def get_personalized_insights(user_id: str, location: str = "London"):
+    """Get personalized weather insights based on learned preferences"""
+    try:
+        weather_data = await weather_service.get_current_weather(location)
+        insights = await ml_prediction_service.get_personalized_insights(user_id, weather_data)
+        return {"location": location, "personalized_insights": insights}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/ai/recommendations")
+async def get_ai_recommendations(location: str = "London", user_id: Optional[str] = None):
+    """Get comprehensive AI recommendations using all learned data"""
+    try:
+        weather_data = await weather_service.get_current_weather(location)
+        user_context = {"user_id": user_id} if user_id else None
+        recommendations = await learning_service.get_ai_recommendations(location, weather_data, user_context)
+        return {"location": location, **recommendations}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/ai/feedback")
+async def submit_feedback(feedback: Dict):
+    """Submit feedback to help AI learn and improve"""
+    try:
+        await learning_service.store_user_feedback(feedback)
+        return {"status": "success", "message": "Thank you for your feedback!"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/ai/aggregate")
+async def get_aggregated_intelligence(location: str = "London"):
+    """Get all AI-powered insights aggregated from multiple sources"""
+    try:
+        aggregated_data = await learning_service.aggregate_learning_data(location)
+        return aggregated_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
