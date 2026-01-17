@@ -16,6 +16,7 @@ from app.services.enhanced_nlp_service import EnhancedNLPService
 from app.services.web_insights_service import WebInsightsService
 from app.services.ml_prediction_service import MLPredictionService
 from app.services.learning_service import LearningService
+from app.services.long_range_forecast_service import LongRangeForecastService
 
 router = APIRouter()
 weather_service = WeatherService()
@@ -433,3 +434,107 @@ async def get_aggregated_intelligence(location: str = "London"):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+# Long-Range Forecasting Endpoints
+
+@router.get("/forecast/extended")
+async def get_extended_forecast(location: str = "London", weeks: int = 4):
+    """Get extended weather forecast for multiple weeks (2-6 weeks)"""
+    try:
+        if weeks < 1 or weeks > 8:
+            raise HTTPException(status_code=400, detail="Weeks must be between 1 and 8")
+        
+        forecast = await long_range_service.predict_extended_forecast(location, weeks)
+        return forecast
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/forecast/ensemble")
+async def get_ensemble_forecast(location: str = "London", days: int = 30):
+    """Get ensemble forecast using multiple ML models for improved accuracy"""
+    try:
+        if days < 7 or days > 60:
+            raise HTTPException(status_code=400, detail="Days must be between 7 and 60")
+        
+        forecast = await long_range_service.predict_with_ensemble(location, days)
+        return forecast
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/climate/patterns")
+async def get_climate_patterns(location: str = "London"):
+    """Analyze climate patterns affecting long-range forecasts"""
+    try:
+        patterns = await long_range_service.analyze_climate_patterns(location)
+        return patterns
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/forecast/accuracy")
+async def get_forecast_accuracy():
+    """Get accuracy metrics for different forecast time ranges"""
+    try:
+        metrics = await long_range_service.get_forecast_accuracy_metrics()
+        return metrics
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+
+# Long-Range Forecasting Endpoints
+
+@router.get("/forecast/extended")
+async def get_extended_forecast(location: str = "London", weeks: int = 4):
+    "`"`"Get extended weather forecast for multiple weeks (2-6 weeks)"`"`"
+    try:
+        if weeks < 1 or weeks > 8:
+            raise HTTPException(status_code=400, detail="Weeks must be between 1 and 8")
+        
+        from app.services.long_range_forecast_service import LongRangeForecastService
+        long_range_service = LongRangeForecastService()
+        forecast = await long_range_service.predict_extended_forecast(location, weeks)
+        return forecast
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/forecast/ensemble")
+async def get_ensemble_forecast(location: str = "London", days: int = 30):
+    "`"`"Get ensemble forecast using multiple ML models for improved accuracy"`"`"
+    try:
+        if days < 7 or days > 60:
+            raise HTTPException(status_code=400, detail="Days must be between 7 and 60")
+        
+        from app.services.long_range_forecast_service import LongRangeForecastService
+        long_range_service = LongRangeForecastService()
+        forecast = await long_range_service.predict_with_ensemble(location, days)
+        return forecast
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/climate/patterns")
+async def get_climate_patterns(location: str = "London"):
+    "`"`"Analyze climate patterns affecting long-range forecasts"`"`"
+    try:
+        from app.services.long_range_forecast_service import LongRangeForecastService
+        long_range_service = LongRangeForecastService()
+        patterns = await long_range_service.analyze_climate_patterns(location)
+        return patterns
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/forecast/accuracy")
+async def get_forecast_accuracy():
+    "`"`"Get accuracy metrics for different forecast time ranges"`"`"
+    try:
+        from app.services.long_range_forecast_service import LongRangeForecastService
+        long_range_service = LongRangeForecastService()
+        metrics = await long_range_service.get_forecast_accuracy_metrics()
+        return metrics
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
