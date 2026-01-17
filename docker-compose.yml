@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: weather-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DATABASE_URL=sqlite+aiosqlite:///./weather.db
+    volumes:
+      - ./backend:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build: ./frontend
+    container_name: weather-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev -- --host
+    depends_on:
+      - backend
